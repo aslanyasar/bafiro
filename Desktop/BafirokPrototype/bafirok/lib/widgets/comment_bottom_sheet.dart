@@ -8,20 +8,25 @@ class CommentBottomSheet extends StatefulWidget {
 }
 
 class _CommentBottomSheetState extends State<CommentBottomSheet> {
-  final List<Map<String, String>> comments = [
+  final List<Map<String, dynamic>> comments = [
     {
       "user": "melikegastro",
       "comment": "Çok güzel konsept!",
       "avatar": "assets/images/user1.jpg",
+      "likes": 2,
+      "isLiked": false,
     },
     {
       "user": "mustafakaya",
       "comment": "Cafeye bayıldım 🔥",
       "avatar": "assets/images/user2.jpg",
+      "likes": 1,
+      "isLiked": false,
     },
   ];
 
   final TextEditingController _controller = TextEditingController();
+  int? replyToIndex;
 
   void _addComment() {
     final text = _controller.text.trim();
@@ -31,10 +36,24 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
           "user": "sen.bro",
           "comment": text,
           "avatar": "assets/images/user1.jpg",
+          "likes": 0,
+          "isLiked": false,
         });
         _controller.clear();
+        replyToIndex = null;
       });
     }
+  }
+
+  void _toggleLike(int index) {
+    setState(() {
+      comments[index]['isLiked'] = !comments[index]['isLiked'];
+      if (comments[index]['isLiked']) {
+        comments[index]['likes']++;
+      } else {
+        comments[index]['likes']--;
+      }
+    });
   }
 
   @override
@@ -53,7 +72,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: const BoxDecoration(
-            color: Colors.black,
+            color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
@@ -62,7 +81,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                 width: 40,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: Colors.grey[700],
+                  color: Colors.grey[400],
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
@@ -70,7 +89,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
               const Text(
                 "Yorumlar",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -96,17 +115,52 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "@${comment["user"]}",
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "@${comment["user"]}",
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "${comment['likes']}",
+                                          style: const TextStyle(color: Colors.black87),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            comment['isLiked']
+                                                ? Icons.favorite
+                                                : Icons.favorite_border,
+                                            color: comment['isLiked'] ? Colors.red : Colors.black45,
+                                            size: 20,
+                                          ),
+                                          onPressed: () => _toggleLike(index),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   comment["comment"] ?? "",
-                                  style: const TextStyle(color: Colors.white70),
+                                  style: const TextStyle(color: Colors.black87),
+                                ),
+                                const SizedBox(height: 4),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      replyToIndex = index;
+                                    });
+                                  },
+                                  child: const Text(
+                                    "Yanıtla",
+                                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                                  ),
                                 ),
                               ],
                             ),
@@ -117,24 +171,35 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                   },
                 ),
               ),
-              const Divider(color: Colors.grey),
+              if (replyToIndex != null)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Text(
+                      "@${comments[replyToIndex!]['user']} kullanıcısına yanıt yazılıyor...",
+                      style: const TextStyle(color: Colors.black54, fontSize: 12),
+                    ),
+                  ),
+                ),
               Row(
                 children: [
                   Expanded(
                     child: TextField(
                       controller: _controller,
                       autofocus: true,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                         hintText: "Yorum yaz...",
-                        hintStyle: const TextStyle(color: Colors.white54),
+                        hintStyle: const TextStyle(color: Colors.black45),
                         filled: true,
-                        fillColor: Colors.grey[850],
+                        fillColor: Colors.grey[200],
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
                         ),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        suffixIcon: const Icon(Icons.emoji_emotions),
                       ),
                       onSubmitted: (_) => _addComment(),
                     ),
@@ -142,7 +207,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                   const SizedBox(width: 8),
                   GestureDetector(
                     onTap: _addComment,
-                    child: const Icon(Icons.send, color: Colors.white),
+                    child: const Icon(Icons.send, color: Colors.black),
                   ),
                 ],
               ),
@@ -153,4 +218,3 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
     );
   }
 }
-

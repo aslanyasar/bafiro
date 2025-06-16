@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import '../explore/explore_screen.dart';
 
-
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -46,3 +45,4 @@ class _MainPageState extends State<MainPage> {
     );
   }
 }
+
