@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static ThemeData darkTheme = ThemeData(
-    brightness: Brightness.dark,
+  static final darkTheme = ThemeData(
     scaffoldBackgroundColor: Colors.black,
-    primaryColor: Colors.white,
-    iconTheme: const IconThemeData(color: Colors.white),
+    primaryColor: Colors.cyanAccent,
+    colorScheme: const ColorScheme.dark(
+      primary: Colors.cyanAccent,
+      secondary: Colors.orangeAccent,
+    ),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(color: Colors.white),
       bodyMedium: TextStyle(color: Colors.white70),
+      titleLarge: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
     ),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.black,
-      iconTheme: IconThemeData(color: Colors.white),
-    ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: Colors.black,
-      selectedItemColor: Colors.white,
-      unselectedItemColor: Colors.grey,
-    ),
+    iconTheme: const IconThemeData(color: Colors.white),
   );
 }
-

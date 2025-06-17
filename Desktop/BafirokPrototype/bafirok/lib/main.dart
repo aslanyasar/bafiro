@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'core/theme.dart';
 import 'screens/home/main_page.dart';
+import 'providers/comment_provider.dart';
 
 void main() {
   runApp(const BafirokApp());
@@ -11,11 +13,16 @@ class BafirokApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Bafirok',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
-      home: const MainPage(), // burada artık bottom bar geliyor
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CommentProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Bafirok',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.darkTheme,
+        home: const MainPage(),
+      ),
     );
   }
 }
